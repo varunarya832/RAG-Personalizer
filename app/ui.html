@@ -86,43 +86,63 @@
     </div>
   </div>
 
+
+
   <script>
-    async function submitDocs() {
-      const text = document.getElementById('docInput').value;
-      const lines = text.split('\n').filter(line => line.trim());
-
-      const res = await fetch('/upload_docs', {
-        method: 'POST',
+    // Define the API URL (change to your Vercel URL)
+    const apiUrl = "https://your-project-name.vercel.app";  // Replace with your Vercel deployed API URL
+  
+    // Function to handle document upload
+    function uploadDocuments() {
+      const userData = document.getElementById("user-data").value.split("\n"); // Assuming you have a textarea with id 'user-data'
+  
+      fetch(apiUrl + "/upload_docs", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({ docs: lines })
+        body: JSON.stringify({
+          docs: userData
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log("Upload Successful:", data);
+        alert("Documents uploaded successfully!");
+      })
+      .catch(error => {
+        console.error("Error uploading documents:", error);
+        alert("Error uploading documents.");
       });
-
-      const data = await res.json();
-      alert(data.message);
     }
-
-    async function askQuery() {
-      const input = document.getElementById('userQuery');
-      const query = input.value;
-      if (!query.trim()) return;
-
-      const chat = document.getElementById('chat');
-      chat.innerHTML += `<div class='message user'>You: ${query}</div>`;
-      input.value = '';
-
-      const res = await fetch('/ask', {
-        method: 'POST',
+  
+    // Function to handle question submission
+    function askQuestion() {
+      const query = document.getElementById("user-query").value; // Assuming you have an input with id 'user-query'
+  
+      fetch(apiUrl + "/ask", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify({ query })
+        body: JSON.stringify({
+          query: query
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.answer) {
+          document.getElementById("response").textContent = "Answer: " + data.answer;
+        } else {
+          document.getElementById("response").textContent = "Error: " + data.error;
+        }
+      })
+      .catch(error => {
+        console.error("Error asking question:", error);
+        document.getElementById("response").textContent = "Error asking question.";
       });
-
-      const data = await res.json();
-      chat.innerHTML += `<div class='message ai'>AI: ${data.answer}</div>`;
     }
   </script>
+  
 </body>
 </html>
