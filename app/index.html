@@ -2,152 +2,306 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Personal RAG Assistant</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      display: flex;
-      height: 100vh;
-    }
-    .panel {
-      flex: 1;
-      padding: 20px;
+    * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    .left {
-      background-color: #f3f3f3;
-      border-right: 2px solid #ccc;
-    }
-    .right {
-      background-color: #fff;
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      height: 100vh;
       display: flex;
       flex-direction: column;
     }
+
+    header {
+      padding: 20px;
+      background-color: #eff6ff;
+      color: #0c4a6e;
+      text-align: center;
+      border-bottom: 1px solid #dbeafe;
+    }
+
+    header h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+    }
+
+    .panel {
+      flex: 1;
+      padding: 24px;
+      overflow: auto;
+    }
+
+    .left {
+      background-color: #f8fafc;
+      border-right: 1px solid #e2e8f0;
+    }
+
+    .right {
+      background-color: #ffffff;
+      border-left: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      font-size: 20px;
+    }
+
     textarea {
       width: 100%;
-      height: 80%;
+      height: 180px;
+      padding: 12px;
       font-size: 16px;
-      padding: 10px;
-      resize: none;
+      border-radius: 8px;
+      border: 1px solid #cbd5e1;
+      resize: vertical;
+      margin-bottom: 16px;
     }
+
+    .button-group {
+      display: flex;
+      align-items: center;
+    }
+
     button {
-      margin-top: 10px;
+      background-color: #3b82f6;
+      color: white;
       padding: 10px 20px;
       font-size: 16px;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.2s ease;
     }
+
+    button:hover {
+      background-color: #2563eb;
+    }
+
+    .loading-spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #2563eb;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      animation: spin 1s linear infinite;
+      margin-left: 12px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+
     .chat {
       flex: 1;
       overflow-y: auto;
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
+      padding: 20px;
     }
+
     .chat-input {
       display: flex;
-      padding: 10px;
-      border-top: 1px solid #ccc;
+      padding: 16px;
+      border-top: 1px solid #e5e7eb;
+      background-color: #f8fafc;
     }
+
     .chat-input input {
       flex: 1;
-      padding: 10px;
+      padding: 12px;
       font-size: 16px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
     }
+
     .chat-input button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin-left: 10px;
+      margin-left: 12px;
     }
+
     .message {
-      margin-bottom: 10px;
+      margin-bottom: 16px;
+      line-height: 1.6;
     }
+
     .message.user {
       font-weight: bold;
+      color: #111827;
     }
+
     .message.ai {
-      color: #007bff;
+      color: #2563eb;
     }
+
+    .helper-text {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+
+    .intro {
+  background-color: #fef3c7;
+  padding: 16px 24px;
+  border-bottom: 1px solid #fde68a;
+  font-size: 15px;
+}
+
+.intro-header {
+  font-size: 18px;
+  cursor: pointer;
+  color: #92400e;
+  user-select: none;
+}
+
+.intro-content {
+  margin-top: 10px;
+  color: #78350f;
+}
+
+.intro-content ol {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.intro-content hr {
+  border: none;
+  border-top: 1px solid #fcd34d;
+  margin: 12px 0;
+}
+
+
   </style>
 </head>
 <body>
-  <div class="panel left">
-    <h2>Enter Personal Data</h2>
-    <textarea id="docInput" placeholder="Enter each fact on a new line...\nExample:\nI am Varun.\nI like chicken biryani."></textarea>
-    <button onclick="submitDocs()">Submit</button>
-  </div>
+  <section class="intro">
+    <div class="intro-header" onclick="toggleIntro()">
+      <strong>ℹ️ How This Assistant Works</strong>
+      <span id="introToggle" style="float: right;">▼</span>
+    </div>
+    <div id="introContent" class="intro-content">
+      <p><strong>🔍 What is this?</strong><br/>
+        This assistant combines your own data with powerful LLMs using Retrieval-Augmented Generation (RAG). It fills in the gaps where LLMs can’t access private or external data, by training on what you provide and generating context-aware answers.
+      </p>
+      <hr/>
+      <p><strong>📘 How to use it:</strong></p>
+      <ol>
+        <li><strong>Step 1 – Upload Your Data:</strong>  
+          Enter your facts or notes in the left panel. Type one item per line. Then click <em>“Upload Data”</em>.</li>
+        <li><strong>Step 2 – Ask a Question:</strong>  
+          Use the right panel to ask questions in natural language. The assistant will respond using your uploaded data and its own language understanding.</li>
+      </ol>
+      <p><strong>💡 Tip:</strong> More structured input = better answers. Try names, timelines, or key facts.</p>
+    </div>
+  </section>
+  
 
-  <div class="panel right">
-    <h2>Ask the Assistant</h2>
-    <div class="chat" id="chat"></div>
-    <div class="chat-input">
-      <input type="text" id="userQuery" placeholder="Ask a question..." />
-      <button onclick="askQuery()">Send</button>
+  <div class="container">
+    <div class="panel left">
+      <h2>Step 1: Upload Your Data</h2>
+      <p class="helper-text">Paste your facts or notes below, one per line:</p>
+      <textarea id="docInput" placeholder="E.g., John was born in 1980.&#10;He moved to Paris in 2005..."></textarea>
+      <div class="button-group">
+        <button onclick="submitDocs()">Upload Data</button>
+        <div id="docLoading" class="loading-spinner" style="display: none;"></div>
+      </div>
+    </div>
+
+    <div class="panel right">
+      <h2>Step 2: Ask a Question</h2>
+      <div class="chat" id="chat"></div>
+      <div class="chat-input">
+        <input type="text" id="userQuery" placeholder="Ask something like: Where did John live in 2010?" />
+        <button onclick="askQuery()">Send</button>
+        <div id="queryLoading" class="loading-spinner" style="display: none;"></div>
+      </div>
     </div>
   </div>
 
   <script>
-    // Define the API URL (change to your Vercel URL)
-    const apiUrl = "http://localhost:8000";  // Replace with your Vercel deployed API URL
-  
-    // Function to handle document submission
-    function submitDocs() {
-      const userData = document.getElementById("docInput").value.split("\n");
+    const apiUrl = "http://localhost:8000";
 
+    function showLoading(id, show) {
+      document.getElementById(id).style.display = show ? 'block' : 'none';
+    }
+
+    function submitDocs() {
+      const userData = document.getElementById("docInput").value.trim().split("\n").filter(line => line);
+      if (userData.length === 0) {
+        alert("Please enter some data first.");
+        return;
+      }
+
+      showLoading("docLoading", true);
       fetch(apiUrl + "/upload_docs", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          docs: userData
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docs: userData })
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
-        console.log("Upload Successful:", data);
-        alert("Documents uploaded successfully!");
+        alert("✅ Data uploaded successfully!");
+        console.log("Upload Success:", data);
       })
-      .catch(error => {
-        console.error("Error uploading documents:", error);
-        alert("Error uploading documents.");
-      });
+      .catch(err => {
+        console.error("Upload Error:", err);
+        alert("❌ Failed to upload documents.");
+      })
+      .finally(() => showLoading("docLoading", false));
     }
-  
-    // Function to handle question submission
+
     function askQuery() {
-      const query = document.getElementById("userQuery").value;
-  
+      const query = document.getElementById("userQuery").value.trim();
+      if (!query) return;
+
+      const chat = document.getElementById("chat");
+      chat.innerHTML += `<div class="message user">You: ${query}</div>`;
+      document.getElementById("userQuery").value = '';
+      showLoading("queryLoading", true);
+
       fetch(apiUrl + "/ask", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          query: query
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query })
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
-        const chat = document.getElementById("chat");
-        
-        if (data.answer) {
-          // Append user and AI message to the chat
-          chat.innerHTML += `<div class="message user">You: ${query}</div>`;
-          chat.innerHTML += `<div class="message ai">Assistant: ${data.answer}</div>`;
-        } else {
-          chat.innerHTML += `<div class="message user">You: ${query}</div>`;
-          chat.innerHTML += `<div class="message ai">Assistant: Error fetching answer.</div>`;
-        }
-        
-        // Clear the input after sending the query
-        document.getElementById("userQuery").value = '';
-        chat.scrollTop = chat.scrollHeight; // Scroll to the latest message
+        const answer = data.answer || "Sorry, no answer available.";
+        chat.innerHTML += `<div class="message ai">Assistant: ${answer}</div>`;
+        chat.scrollTop = chat.scrollHeight;
       })
-      .catch(error => {
-        console.error("Error asking question:", error);
-      });
+      .catch(err => {
+        console.error("Query Error:", err);
+        chat.innerHTML += `<div class="message ai">Assistant: Error fetching answer.</div>`;
+      })
+      .finally(() => showLoading("queryLoading", false));
     }
+
+    function toggleIntro() {
+  const content = document.getElementById("introContent");
+  const toggleIcon = document.getElementById("introToggle");
+  const isVisible = content.style.display !== "none";
+
+  content.style.display = isVisible ? "none" : "block";
+  toggleIcon.textContent = isVisible ? "▶" : "▼";
+}
+
   </script>
 </body>
 </html>
