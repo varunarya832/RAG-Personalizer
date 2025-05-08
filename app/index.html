@@ -86,16 +86,14 @@
     </div>
   </div>
 
-
-
   <script>
     // Define the API URL (change to your Vercel URL)
-    const apiUrl = "https://your-project-name.vercel.app";  // Replace with your Vercel deployed API URL
+    const apiUrl = "http://localhost:8000";  // Replace with your Vercel deployed API URL
   
-    // Function to handle document upload
-    function uploadDocuments() {
-      const userData = document.getElementById("user-data").value.split("\n"); // Assuming you have a textarea with id 'user-data'
-  
+    // Function to handle document submission
+    function submitDocs() {
+      const userData = document.getElementById("docInput").value.split("\n");
+
       fetch(apiUrl + "/upload_docs", {
         method: "POST",
         headers: {
@@ -117,8 +115,8 @@
     }
   
     // Function to handle question submission
-    function askQuestion() {
-      const query = document.getElementById("user-query").value; // Assuming you have an input with id 'user-query'
+    function askQuery() {
+      const query = document.getElementById("userQuery").value;
   
       fetch(apiUrl + "/ask", {
         method: "POST",
@@ -131,18 +129,25 @@
       })
       .then(response => response.json())
       .then(data => {
+        const chat = document.getElementById("chat");
+        
         if (data.answer) {
-          document.getElementById("response").textContent = "Answer: " + data.answer;
+          // Append user and AI message to the chat
+          chat.innerHTML += `<div class="message user">You: ${query}</div>`;
+          chat.innerHTML += `<div class="message ai">Assistant: ${data.answer}</div>`;
         } else {
-          document.getElementById("response").textContent = "Error: " + data.error;
+          chat.innerHTML += `<div class="message user">You: ${query}</div>`;
+          chat.innerHTML += `<div class="message ai">Assistant: Error fetching answer.</div>`;
         }
+        
+        // Clear the input after sending the query
+        document.getElementById("userQuery").value = '';
+        chat.scrollTop = chat.scrollHeight; // Scroll to the latest message
       })
       .catch(error => {
         console.error("Error asking question:", error);
-        document.getElementById("response").textContent = "Error asking question.";
       });
     }
   </script>
-  
 </body>
 </html>

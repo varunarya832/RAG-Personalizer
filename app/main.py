@@ -1,3 +1,6 @@
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_google_genai.embeddings import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
@@ -5,44 +8,74 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.schema import Document
 from langchain.chains import RetrievalQA
 from dotenv import load_dotenv
-load_dotenv()
 import os
 
-docs = [
-    Document(page_content="My name is Varun Arya, and I am from Delhi. I am 28 years old, a software developer, and I love chicken biryani. I am a graduate, married, and I own a pet named Jenny.")
-]
+# Load environment variables
+load_dotenv()
 
-splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=10)
-split_docs = splitter.split_documents(docs)
+app = FastAPI()
 
-embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-vector_store = Chroma.from_documents(split_docs, embedding_model)
-retriever = vector_store.as_retriever()
-
-llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash",
-    temperature=0,
-    max_tokens=None,
-    timeout=None,
-    max_retries=2,
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-qa_chain = RetrievalQA.from_chain_type(
-    llm=llm,
-    retriever=retriever,
-    chain_type="stuff",
-)
+# Request models
+class DocsInput(BaseModel):
+    docs: list[str]
 
+class QueryInput(BaseModel):
+    query: str
 
-print("Ask a question about Varun's introduction:")
+# Globals
+vector_store = None
+retriever = None
+qa_chain = None
 
-while True:
-    query = input("Enter your question (or 'exit' to quit): ")
-    if query.lower() == 'exit':
-        break
-    result = qa_chain.invoke(query)
-    print("AI Response:")
-    print("=======================")
-    print()
-    print(result)
+@app.post("/upload_docs")
+def upload_docs(payload: DocsInput):
+    global vector_store, retriever, qa_chain
 
+    # Convert lines into LangChain Document objects
+    documents = [Document(page_content=line) for line in payload.docs if line.strip()]
+
+    # Text splitting (optional)
+    splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=10)
+    split_docs = splitter.split_documents(documents)
+
+    # Create embedding model and vector store
+    embedding_model = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    vector_store = Chroma.from_documents(split_docs, embedding_model)
+    retriever = vector_store.as_retriever()
+
+    # Setup QA chain
+    llm = ChatGoogleGenerativeAI(
+        model="gemini-2.0-flash",
+        temperature=0,
+        max_tokens=None,
+        timeout=None,
+        max_retries=2,
+    )
+
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm,
+        retriever=retriever,
+        chain_type="stuff",
+    )
+
+    return {"message": "Documents processed and vector store created successfully."}
+
+@app.post("/ask")
+def ask_question(payload: QueryInput):
+    global qa_chain
+
+    if not qa_chain:
+        return {"error": "Please upload documents first."}
+
+    result = qa_chain.invoke(payload.query)
+    answer_text = result.get('result') or str(result)
+    return {"answer": answer_text}
