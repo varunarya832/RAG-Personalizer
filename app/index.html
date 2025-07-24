@@ -12,243 +12,486 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f9fafb;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .app {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 1200px;
+      height: 90vh;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
 
-    header {
-      padding: 20px;
-      background-color: #eff6ff;
-      color: #0c4a6e;
+    .header {
+      padding: 32px 32px 24px;
       text-align: center;
-      border-bottom: 1px solid #dbeafe;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
-    header h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a202c;
+      margin-bottom: 8px;
     }
 
-    header p {
-      font-size: 14px;
-      line-height: 1.6;
+    .header p {
+      color: #718096;
+      font-size: 16px;
     }
 
-    .container {
+    .main {
       display: flex;
       flex: 1;
+      overflow: hidden;
     }
 
     .panel {
       flex: 1;
-      padding: 24px;
-      overflow: auto;
-    }
-
-    .left {
-      background-color: #f8fafc;
-      border-right: 1px solid #e2e8f0;
-    }
-
-    .right {
-      background-color: #ffffff;
-      border-left: 1px solid #e2e8f0;
+      padding: 32px;
       display: flex;
       flex-direction: column;
     }
 
-    h2 {
-      margin-bottom: 12px;
+    .panel:first-child {
+      border-right: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .panel-title {
       font-size: 20px;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-number {
+      background: #667eea;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     textarea {
-      width: 100%;
-      height: 180px;
-      padding: 12px;
+      flex: 1;
+      padding: 20px;
       font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #cbd5e1;
-      resize: vertical;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      resize: none;
+      outline: none;
+      font-family: inherit;
+      background: #fafafa;
+      transition: all 0.2s ease;
+      margin-bottom: 24px;
+    }
+
+    textarea:focus {
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .sample-section {
+      margin-bottom: 20px;
+    }
+
+    .sample-label {
+      font-size: 14px;
+      color: #718096;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .sample-options {
+      display: flex;
+      gap: 8px;
       margin-bottom: 16px;
     }
 
-    .button-group {
+    .sample-option {
+      flex: 1;
+      background: #f7fafc;
+      color: #4a5568;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .sample-option:hover {
+      background: #edf2f7;
+      border-color: #cbd5e0;
+      transform: translateY(-1px);
+    }
+
+    .sample-option.selected {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-color: #667eea;
+    }
+
+    .upload-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
     }
 
-    button {
-      background-color: #3b82f6;
-      color: white;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
+    .upload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
     }
 
-    button:hover {
-      background-color: #2563eb;
+    .upload-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
     }
 
-    .loading-spinner {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #2563eb;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      animation: spin 1s linear infinite;
-      margin-left: 12px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg);}
-      100% { transform: rotate(360deg);}
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .chat {
       flex: 1;
       overflow-y: auto;
       padding: 20px;
+      background: #fafafa;
+      border-radius: 16px;
+      margin-bottom: 20px;
+      scroll-behavior: smooth;
     }
 
-    .chat-input {
-      display: flex;
-      padding: 16px;
-      border-top: 1px solid #e5e7eb;
-      background-color: #f8fafc;
+    .chat::-webkit-scrollbar {
+      width: 6px;
     }
 
-    .chat-input input {
-      flex: 1;
-      padding: 12px;
-      font-size: 16px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
+    .chat::-webkit-scrollbar-track {
+      background: transparent;
     }
 
-    .chat-input button {
-      margin-left: 12px;
+    .chat::-webkit-scrollbar-thumb {
+      background: #cbd5e0;
+      border-radius: 3px;
     }
 
     .message {
       margin-bottom: 16px;
-      line-height: 1.6;
+      padding: 16px 20px;
+      border-radius: 16px;
+      max-width: 85%;
+      line-height: 1.5;
     }
 
     .message.user {
-      font-weight: bold;
-      color: #111827;
+      background: #667eea;
+      color: white;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
     }
 
     .message.ai {
-      color: #2563eb;
+      background: white;
+      color: #2d3748;
+      border: 1px solid #e2e8f0;
+      border-bottom-left-radius: 4px;
     }
 
-    .helper-text {
-      font-size: 14px;
-      color: #64748b;
+    .chat-input {
+      display: flex;
+      gap: 12px;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 16px 20px;
+      font-size: 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .chat-input input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .send-btn {
+      background: #667eea;
+      color: white;
+      padding: 16px 24px;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .send-btn:hover {
+      background: #5a67d8;
+      transform: scale(1.02);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid transparent;
+      border-top: 2px solid currentColor;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: #a0aec0;
+      text-align: center;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
       margin-bottom: 16px;
     }
 
-    .intro {
-  background-color: #fef3c7;
-  padding: 16px 24px;
-  border-bottom: 1px solid #fde68a;
-  font-size: 15px;
-}
-
-.intro-header {
-  font-size: 18px;
-  cursor: pointer;
-  color: #92400e;
-  user-select: none;
-}
-
-.intro-content {
-  margin-top: 10px;
-  color: #78350f;
-}
-
-.intro-content ol {
-  margin-left: 20px;
-  margin-top: 10px;
-}
-
-.intro-content hr {
-  border: none;
-  border-top: 1px solid #fcd34d;
-  margin: 12px 0;
-}
-
-
+    @media (max-width: 768px) {
+      .main {
+        flex-direction: column;
+      }
+      
+      .panel:first-child {
+        border-right: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+      
+      .app {
+        height: 95vh;
+        margin: 10px;
+      }
+    }
   </style>
 </head>
 <body>
-  <section class="intro">
-    <div class="intro-header" onclick="toggleIntro()">
-      <strong>ℹ️ How This Assistant Works</strong>
-      <span id="introToggle" style="float: right;">▼</span>
-    </div>
-    <div id="introContent" class="intro-content">
-      <p><strong>🔍 What is this?</strong><br/>
-        This assistant combines your own data with powerful LLMs using Retrieval-Augmented Generation (RAG). It fills in the gaps where LLMs can’t access private or external data, by training on what you provide and generating context-aware answers.
-      </p>
-      <hr/>
-      <p><strong>📘 How to use it:</strong></p>
-      <ol>
-        <li><strong>Step 1 – Upload Your Data:</strong>  
-          Enter your facts or notes in the left panel. Type one item per line. Then click <em>“Upload Data”</em>.</li>
-        <li><strong>Step 2 – Ask a Question:</strong>  
-          Use the right panel to ask questions in natural language. The assistant will respond using your uploaded data and its own language understanding.</li>
-      </ol>
-      <p><strong>💡 Tip:</strong> More structured input = better answers. Try names, timelines, or key facts.</p>
-    </div>
-  </section>
-  
+  <div class="app">
+    <header class="header">
+      <h1>Personal RAG Assistant</h1>
+      <p>Upload your data and ask questions in natural language</p>
+    </header>
 
-  <div class="container">
-    <div class="panel left">
-      <h2>Step 1: Upload Your Data</h2>
-      <p class="helper-text">Paste your facts or notes below, one per line:</p>
-      <textarea id="docInput" placeholder="E.g., John was born in 1980.&#10;He moved to Paris in 2005..."></textarea>
-      <div class="button-group">
-        <button onclick="submitDocs()">Upload Data</button>
-        <div id="docLoading" class="loading-spinner" style="display: none;"></div>
+    <div class="main">
+      <div class="panel">
+        <h2 class="panel-title">
+          <span class="step-number">1</span>
+          Upload Your Data
+        </h2>
+        <textarea 
+          id="docInput" 
+          placeholder="Click 'Generate Sample' to try with example data, or enter your own facts/notes here, one per line:&#10;&#10;John was born in 1980&#10;He moved to Paris in 2005&#10;John works as a software engineer"
+        ></textarea>
+        <div class="sample-section">
+          <p class="sample-label">Or try with sample data:</p>
+          <div class="sample-options">
+            <button class="sample-option" onclick="loadSampleData(0)">
+              👤 Personal Bio
+            </button>
+            <button class="sample-option" onclick="loadSampleData(1)">
+              🏢 Company Info
+            </button>
+            <button class="sample-option" onclick="loadSampleData(2)">
+              📚 Recipe Data
+            </button>
+          </div>
+        </div>
+        <button class="upload-btn" onclick="submitDocs()" id="uploadBtn">
+          <span id="uploadText">Upload Data</span>
+          <div id="uploadLoading" class="loading" style="display: none;"></div>
+        </button>
       </div>
-    </div>
 
-    <div class="panel right">
-      <h2>Step 2: Ask a Question</h2>
-      <div class="chat" id="chat"></div>
-      <div class="chat-input">
-        <input type="text" id="userQuery" placeholder="Ask something like: Where did John live in 2010?" />
-        <button onclick="askQuery()">Send</button>
-        <div id="queryLoading" class="loading-spinner" style="display: none;"></div>
+      <div class="panel">
+        <h2 class="panel-title">
+          <span class="step-number">2</span>
+          Ask Questions
+        </h2>
+        <div class="chat-container">
+          <div class="chat" id="chat">
+            <div class="empty-state">
+              <div class="empty-state-icon">💬</div>
+              <p>Upload your data first, then start asking questions!</p>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input 
+              type="text" 
+              id="userQuery" 
+              placeholder="Where did John live in 2010?"
+              onkeypress="handleKeyPress(event)"
+            />
+            <button class="send-btn" onclick="askQuery()" id="sendBtn">
+              <span id="sendText">Send</span>
+              <div id="queryLoading" class="loading" style="display: none;"></div>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
     const apiUrl = "http://localhost:8000";
+    let isDataUploaded = false;
+    let selectedSample = -1;
 
-    function showLoading(id, show) {
-      document.getElementById(id).style.display = show ? 'block' : 'none';
+    // Predefined sample datasets
+    const predefinedSamples = [
+      {
+        title: "Personal Bio",
+        data: [
+          "John Smith was born in 1985 in New York City",
+          "John graduated from MIT in 2007 with a degree in Computer Science",
+          "John moved to San Francisco in 2010 to work at Google",
+          "John got married to Sarah Johnson in 2015",
+          "John and Sarah bought a house in Palo Alto in 2018",
+          "John started his own tech startup called DataFlow in 2020",
+          "John's startup focuses on data analytics and machine learning",
+          "John has two children: Emma (born 2019) and Lucas (born 2021)",
+          "John enjoys playing tennis and hiking on weekends",
+          "John speaks English and Spanish fluently"
+        ]
+      },
+      {
+        title: "Company Info",
+        data: [
+          "TechCorp was founded in 2015 by Mike Chen and Lisa Rodriguez",
+          "TechCorp is headquartered in Austin, Texas",
+          "TechCorp specializes in cloud computing and cybersecurity solutions",
+          "TechCorp has 250 employees across 5 offices worldwide",
+          "TechCorp's main clients include Fortune 500 companies",
+          "TechCorp raised $50 million in Series B funding in 2022",
+          "TechCorp's annual revenue was $75 million in 2023",
+          "TechCorp offers 24/7 customer support in multiple languages",
+          "TechCorp has partnerships with AWS, Microsoft, and Google Cloud",
+          "TechCorp plans to expand to European markets in 2025"
+        ]
+      },
+      {
+        title: "Recipe Data",
+        data: [
+          "Classic Chocolate Chip Cookies Recipe",
+          "Ingredients: 2 1/4 cups all-purpose flour",
+          "1 cup (2 sticks) butter, softened",
+          "3/4 cup granulated sugar",
+          "3/4 cup packed brown sugar",
+          "2 large eggs",
+          "2 teaspoons vanilla extract",
+          "1 teaspoon baking soda",
+          "1 teaspoon salt",
+          "2 cups chocolate chips",
+          "Preheat oven to 375°F (190°C)",
+          "Mix butter and sugars until creamy",
+          "Beat in eggs and vanilla extract",
+          "Combine flour, baking soda, and salt in separate bowl",
+          "Gradually blend dry ingredients into butter mixture",
+          "Stir in chocolate chips",
+          "Drop rounded tablespoons of dough onto ungreased cookie sheets",
+          "Bake for 9 to 11 minutes or until golden brown",
+          "Cool on baking sheets for 2 minutes before removing",
+          "Makes approximately 48 cookies"
+        ]
+      }
+    ];
+
+    function loadSampleData(index) {
+      // Update visual selection
+      document.querySelectorAll('.sample-option').forEach((btn, i) => {
+        if (i === index) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+
+      selectedSample = index;
+      
+      // Load the selected sample data
+      const textarea = document.getElementById("docInput");
+      const sampleData = predefinedSamples[index].data;
+      
+      textarea.value = sampleData.join("\n");
+      
+      // Reset upload status
+      isDataUploaded = false;
+      document.getElementById("uploadText").textContent = "Upload Data";
+    }
+
+    function showLoading(loadingId, textId, show) {
+      document.getElementById(loadingId).style.display = show ? 'inline-block' : 'none';
+      document.getElementById(textId).style.display = show ? 'none' : 'inline';
     }
 
     function submitDocs() {
-      const userData = document.getElementById("docInput").value.trim().split("\n").filter(line => line);
+      const userData = document.getElementById("docInput").value.trim().split("\n").filter(line => line.trim());
       if (userData.length === 0) {
         alert("Please enter some data first.");
         return;
       }
 
-      showLoading("docLoading", true);
+      const uploadBtn = document.getElementById("uploadBtn");
+      uploadBtn.disabled = true;
+      showLoading("uploadLoading", "uploadText", true);
+
       fetch(apiUrl + "/upload_docs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -256,14 +499,31 @@
       })
       .then(res => res.json())
       .then(data => {
-        alert("✅ Data uploaded successfully!");
+        isDataUploaded = true;
+        document.getElementById("uploadText").textContent = "✓ Data Uploaded";
+        updateChatPlaceholder();
         console.log("Upload Success:", data);
       })
       .catch(err => {
         console.error("Upload Error:", err);
-        alert("❌ Failed to upload documents.");
+        alert("Failed to upload documents. Please try again.");
       })
-      .finally(() => showLoading("docLoading", false));
+      .finally(() => {
+        uploadBtn.disabled = false;
+        showLoading("uploadLoading", "uploadText", false);
+      });
+    }
+
+    function updateChatPlaceholder() {
+      const chat = document.getElementById("chat");
+      if (isDataUploaded && chat.children.length === 1 && chat.children[0].classList.contains('empty-state')) {
+        chat.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">✨</div>
+            <p>Great! Your data is uploaded. Ask me anything!</p>
+          </div>
+        `;
+      }
     }
 
     function askQuery() {
@@ -271,9 +531,20 @@
       if (!query) return;
 
       const chat = document.getElementById("chat");
-      chat.innerHTML += `<div class="message user">You: ${query}</div>`;
+      const sendBtn = document.getElementById("sendBtn");
+      
+      // Clear empty state if present
+      if (chat.querySelector('.empty-state')) {
+        chat.innerHTML = '';
+      }
+
+      // Add user message
+      chat.innerHTML += `<div class="message user">${query}</div>`;
       document.getElementById("userQuery").value = '';
-      showLoading("queryLoading", true);
+      
+      // Disable send button and show loading
+      sendBtn.disabled = true;
+      showLoading("queryLoading", "sendText", true);
 
       fetch(apiUrl + "/ask", {
         method: "POST",
@@ -283,25 +554,24 @@
       .then(res => res.json())
       .then(data => {
         const answer = data.answer || "Sorry, no answer available.";
-        chat.innerHTML += `<div class="message ai">Assistant: ${answer}</div>`;
+        chat.innerHTML += `<div class="message ai">${answer}</div>`;
         chat.scrollTop = chat.scrollHeight;
       })
       .catch(err => {
         console.error("Query Error:", err);
-        chat.innerHTML += `<div class="message ai">Assistant: Error fetching answer.</div>`;
+        chat.innerHTML += `<div class="message ai">Sorry, I encountered an error. Please try again.</div>`;
       })
-      .finally(() => showLoading("queryLoading", false));
+      .finally(() => {
+        sendBtn.disabled = false;
+        showLoading("queryLoading", "sendText", false);
+      });
     }
 
-    function toggleIntro() {
-  const content = document.getElementById("introContent");
-  const toggleIcon = document.getElementById("introToggle");
-  const isVisible = content.style.display !== "none";
-
-  content.style.display = isVisible ? "none" : "block";
-  toggleIcon.textContent = isVisible ? "▶" : "▼";
-}
-
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        askQuery();
+      }
+    }
   </script>
 </body>
 </html>
